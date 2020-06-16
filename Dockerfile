@@ -3,7 +3,7 @@ FROM ubuntu:focal
 MAINTAINER jason.everling@gmail.com
 
 # Values are 7.0 or 7.2
-ARG PHP=7.0
+ARG PHP=7.2
 
 # Timezaone as in http://manpages.ubuntu.com/manpages/focal/man3/DateTime::TimeZone::Catalog.3pm.html
 ARG TZ=America/North_Dakota/Center
@@ -24,6 +24,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     locales \
     sassc \
     unixodbc \
+    unixodbc-dev \
     unzip \
     zip && \
     add-apt-repository ppa:ondrej/php -y && \
@@ -57,8 +58,8 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     pecl install \
     memcached \
     igbinary \
-    sqlsrv \
-    pdo_sqlsrv && \
+    sqlsrv-5.3.0 \
+    pdo_sqlsrv-5.3.0 && \
     service apache2 stop
 
 
