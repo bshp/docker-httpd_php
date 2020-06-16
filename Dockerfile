@@ -2,8 +2,11 @@ FROM ubuntu:focal
 
 MAINTAINER jason.everling@gmail.com
 
-ENV PHP_VER=7.0
-ENV TZ=America/North_Dakota/Center
+# Values are 7.0 or 7.2
+ARG PHP=7.0
+
+# Timezaone as in http://manpages.ubuntu.com/manpages/focal/man3/DateTime::TimeZone::Catalog.3pm.html
+ARG TZ=America/North_Dakota/Center
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     echo $TZ > /etc/timezone && \
@@ -29,27 +32,27 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     ca-certificates \
     curl \
     apache2 \
-    libapache2-mod-php$PHP_VER \
+    libapache2-mod-php$PHP \
     libmemcached-dev \
     libmemcached11 \
     libmemcachedutil2 \
-    php$PHP_VER-bcmath \
-    php$PHP_VER-curl \
-    php$PHP_VER-cli \
-    php$PHP_VER-dev \
-    php$PHP_VER-gd \
-    php$PHP_VER-intl \
-    php$PHP_VER-json \
-    php$PHP_VER-ldap \
-    php$PHP_VER-mbstring \
-    php$PHP_VER-mysql \
-    php$PHP_VER-opcache \
-    php$PHP_VER-pspell \
-    php$PHP_VER-readline \
-    php$PHP_VER-soap \
-    php$PHP_VER-xml \
-    php$PHP_VER-xmlrpc \
-    php$PHP_VER-zip \
+    php$PHP-bcmath \
+    php$PHP-curl \
+    php$PHP-cli \
+    php$PHP-dev \
+    php$PHP-gd \
+    php$PHP-intl \
+    php$PHP-json \
+    php$PHP-ldap \
+    php$PHP-mbstring \
+    php$PHP-mysql \
+    php$PHP-opcache \
+    php$PHP-pspell \
+    php$PHP-readline \
+    php$PHP-soap \
+    php$PHP-xml \
+    php$PHP-xmlrpc \
+    php$PHP-zip \
     php-pear && \
     pecl install \
     memcached \
@@ -63,8 +66,11 @@ COPY etc/apache2/ /etc/apache2/
 COPY etc/php/ /etc/php/
 COPY etc/ssl/ /etc/ssl/
 
-RUN a2enmod php$PHP_VER ssl rewrite
+RUN a2enmod php$PHP ssl rewrite
 
+RUN mkdir /opt/data && chown -R www-data:www-data /opt/data && chmod -R 0777 /opt/data
+
+VOLUME ["/opt/data"]
 VOLUME ["/var/log/apache2"]
 VOLUME ["/var/www/html"]
 
