@@ -1,6 +1,0 @@
-language: php
-
-services:
-  - docker
-
-script: docker build --tag bshp/httpd_php:latest .
