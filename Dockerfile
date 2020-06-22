@@ -13,6 +13,11 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     apt-get update && apt-get install --no-install-recommends -y \
     apt-transport-https \
     software-properties-common \
+    aspell \
+    ca-certificates \
+    clamav \
+    clamav-daemon \
+    curl \
     ghostscript \
     libaio1 \
     libcurl4 \
@@ -23,17 +28,19 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     libzip-dev \
     locales \
     sassc \
+    unoconv \
     unixodbc \
     unixodbc-dev \
     unzip \
+    wget \
     zip && \
     add-apt-repository ppa:ondrej/php -y && \
-    apt-get update && apt-get install -y \
-    wget \
-    ca-certificates \
-    curl \
+    add-apt-repository ppa:libreoffice/ppa -y && \
+    apt-get update && \
+    apt-get install -y \
     apache2 \
     libapache2-mod-php$PHP \
+    libreoffice \
     libmemcached-dev \
     libmemcached11 \
     libmemcachedutil2 \
@@ -62,14 +69,20 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     pdo_sqlsrv-5.3.0 && \
     service apache2 stop
 
-
 COPY etc/apache2/ /etc/apache2/
+COPY etc/cron.hourly/freshclam.sh /etc/cron.hourly/freshclam.sh
 COPY etc/php/ /etc/php/
 COPY etc/ssl/ /etc/ssl/
 
 RUN a2enmod php$PHP ssl rewrite
 
-RUN mkdir /opt/data && chown -R www-data:www-data /opt/data && chmod -R 0777 /opt/data
+# Apache uploads, for Moodle/Wordpress Data
+RUN mkdir /opt/data && \
+    chown -R www-data:www-data /opt/data && \
+    chmod -R 0777 /opt/data && \
+    chmod -R 0755 /etc/cron.hourly/freshclam.sh && \
+    mkdir /var/www/.config && \
+    chown -R www-data:www-data /var/www/.config
 
 VOLUME ["/opt/data"]
 VOLUME ["/var/log/apache2"]
