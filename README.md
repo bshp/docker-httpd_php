@@ -1,6 +1,7 @@
 # docker-httpd_php
 Docker for Apache with PHP, pre-configured for Moodle and Wordpress  
   
+  This is a fairly large image (1.7G), as it has Unoconv and LibreOffice configured for Moodle/Wordpress Document Conversion Plugins
 ````
 docker run \
   --publish 80:80 \
